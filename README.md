@@ -1,4 +1,4 @@
-# $Master_CMPM121_Repository$
+# Master CMPM121 Repository
     Contains all projects for CMPM 121
 
 ## Author
