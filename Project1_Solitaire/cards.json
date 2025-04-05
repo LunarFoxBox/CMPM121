@@ -1,6 +1,8 @@
 {
     "color": "",
-    "suit": "",
+    "color_options": ["red", "black"],
+    "type": "",
+    "type_options": ["diamonds", "hearts", "clubs", "spades"],
     "value": "",
     "valid_values": [
         "ace",
