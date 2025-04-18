@@ -1,8 +1,9 @@
 -- Author: Ada Scales
 -- CMPM121: Project 1 - Solitaire
 
-function love.load()
-    print("Loading...")
+require "card"
+require "extractJson"
 
-    print("Complete...")
+function love.load()
+    ExtractJsonClass:new("cards.json")
 end
