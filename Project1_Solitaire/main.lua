@@ -5,5 +5,6 @@ require "card"
 require "extractJson"
 
 function love.load()
-    ExtractJsonClass:new("cards.json")
+    local json = ExtractJsonClass:new()
+    json:extract("cards.json", true)
 end
