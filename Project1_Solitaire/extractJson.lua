@@ -8,13 +8,6 @@ ExtractJsonClass = {}
 
 function ExtractJsonClass:new()
   local jsonExtract = {}
-  jsonExtract.indexTable =
-  {
-    fieldStart = nil,
-    fieldEnd = 1,
-    valueStart = nil,
-    valueEnd = 1
-  }
   local metatable = {__index = ExtractJsonClass}
   setmetatable(jsonExtract, metatable)
   return jsonExtract
@@ -46,43 +39,54 @@ end
 function ExtractJsonClass:extract(fileName, debug)
   local json = fileString(fileName, debug)
   local jsonTable = {}
+  local indexTable =
+  {
+    fieldStart = nil,
+    fieldEnd = 1,
+    valueStart = nil,
+    valueEnd = 1
+  }
   if debug then print("--- Starting Extraction ---") end
-  while self.indexTable.fieldEnd ~= nil do
-    -- field itself
-    if self.indexTable.fieldEnd > #json then break end
-    self.indexTable.fieldStart = string.find(json, "\"", self.indexTable.fieldEnd)
-    if self.indexTable.fieldStart == nil then break end
-    self.indexTable.fieldStart = self.indexTable.fieldStart + 1 -- Offset for quote marks
+  
+  
+  while indexTable.fieldEnd ~= nil do
+    -- parse for the field
+    indexTable.fieldStart = string.find(json, "\"", indexTable.fieldEnd)
+    if indexTable.fieldStart == nil then break end
+    indexTable.fieldStart = indexTable.fieldStart + 1 -- Offset for quote marks
 
-    _, self.indexTable.fieldEnd = string.find(json, "\"", self.indexTable.fieldStart)
-    if self.indexTable.fieldEnd == nil then break end
+    _, indexTable.fieldEnd = string.find(json, "\"", indexTable.fieldStart)
+    if indexTable.fieldEnd == nil then break end
 
-    -- add field to the jsonTable
-    local field = string.sub(json, self.indexTable.fieldStart, self.indexTable.fieldEnd - 1)
+    -- get field
+    local field = string.sub(json, indexTable.fieldStart, indexTable.fieldEnd - 1)
     local valueTable = {}
 
     -- field values
-    self.indexTable.valueEnd = string.find(json, ": ", self.indexTable.fieldEnd)
-
-    while self.indexTable.valueEnd ~= nil do
-      -- parses for the value to insert them
-      self.indexTable.valueStart = string.find(json, "\"", self.indexTable.valueEnd)
-      if self.indexTable.valueStart == nil then break end
-      self.indexTable.valueStart = self.indexTable.valueStart + 1 -- offset for quote marks
-      _, self.indexTable.valueEnd = string.find(json, "\"", self.indexTable.valueStart)
-      if self.indexTable.valueEnd == nil then break end
+    indexTable.valueEnd = string.find(json, ": ", indexTable.fieldEnd)
+    while indexTable.valueEnd ~= nil do
+      -- parses for the values
+      indexTable.valueStart = string.find(json, "\"", indexTable.valueEnd)
+      if indexTable.valueStart == nil then break end
+      indexTable.valueStart = indexTable.valueStart + 1 -- offset for quote marks
+      
+      _, indexTable.valueEnd = string.find(json, "\"", indexTable.valueStart)
+      if indexTable.valueEnd == nil then break end
 
       -- insert the values into the jsonTable's sub table
-      local value = string.sub(json, self.indexTable.valueStart, self.indexTable.valueEnd - 1)
+      local value = string.sub(json, indexTable.valueStart, indexTable.valueEnd - 1)
       table.insert(valueTable, value)
 
       -- Move to next element and if the eleemnt indicates end then break
-      self.indexTable.valueEnd = self.indexTable.valueEnd + 1
-      if string.find(json, "]", self.indexTable.valueEnd - 1) == self.indexTable.valueEnd then break end
+      indexTable.valueEnd = indexTable.valueEnd + 1
+      if string.find(json, "]", indexTable.valueEnd - 1) == indexTable.valueEnd then break end
     end
+    
+    -- Add field and values into table
     jsonTable[field] = valueTable
-    self.indexTable.fieldEnd = self.indexTable.valueEnd
+    indexTable.fieldEnd = indexTable.valueEnd
   end
+
 
   if debug then
     debugPrint(jsonTable)

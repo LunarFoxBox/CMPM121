@@ -1,7 +1,7 @@
 {
-    "colors": ["red", "black"],
-    "suits": ["diamonds", "hearts", "clubs", "spades"],
-    "values": [
+    "color": ["red", "black"],
+    "suit": ["diamonds", "hearts", "clubs", "spades"],
+    "value": [
         "ace",
         "2",
         "3",

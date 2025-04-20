@@ -1,18 +1,18 @@
 require("extractJson")
 CardClass = {}
 
-function CardClass:new(xPos, yPos, color, suit, value)
+function CardClass:new(xPos, yPos, info, values)
     local card = {}
     local metatable = {__index = CardClass}
     setmetatable(card, metatable)
-
-    local file = JsonClass:new("cards.json")
 
     card.position = {
         x = xPos,
         y = yPos
     }
-    card.info = {
-        
-    }
+    for fields, _ in pairs(info) do
+      local f = "card." .. tostring(fields) .. " = " .. tostring("nil")
+      load(f)
+    end
+    return card
 end
