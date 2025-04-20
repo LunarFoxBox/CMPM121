@@ -1,7 +1,7 @@
 require("extractJson")
 CardClass = {}
 
-function CardClass:new(xPos, yPos, info, values)
+function CardClass:new(xPos, yPos, info)
     local card = {}
     local metatable = {__index = CardClass}
     setmetatable(card, metatable)
@@ -10,9 +10,10 @@ function CardClass:new(xPos, yPos, info, values)
         x = xPos,
         y = yPos
     }
+    -- Adds the fields to the card based on provided info
     for fields, _ in pairs(info) do
-      local f = "card." .. tostring(fields) .. " = " .. tostring("nil")
-      load(f)
+      local insertField = "card." .. tostring(fields) .. " = nil"
+      load(insertField)
     end
     return card
 end

@@ -7,13 +7,13 @@ require "vector"
 
 function love.load()
     local json = ExtractJsonClass:new()
-    local t = json:extract("cards.json", true)
+    local t = json:extract("cards.json")
 --    print("Printing colors from returned table")
 --    for _, value in pairs(t["color"]) do
 --        print(value)
 --    end
-    local deckData = DeckClass:new("cards.json", "standard")
-    deck = deckData:generateDeck(Vector(10,10), 52)
+    local deck = DeckClass:new("cards.json", "standard", 52, Vector(10,10))
+    
     for _, card in pairs(deck) do
       print("card:\nColor = " .. tostring(card.color) .. "\nSuit = " .. tostring(card.suit) .. "\nValue = " .. tostring(card.value))
     end
