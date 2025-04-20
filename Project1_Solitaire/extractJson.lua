@@ -21,12 +21,12 @@ function ExtractJsonClass:new()
 end
 
 -- return string of file
-local function fileString(fileName)
+local function fileString(fileName, debug)
   if type(fileName) ~= "string" then return error("Invalid input!\t- Expected type string") end
   local file = io.open(fileName, "r")
   if file == nil then return error("Could not open file!") end
   local json = file:read("*a")
-  print("--- JSON CONETNETS ---\n" .. json)
+  if debug then print("--- JSON CONETNETS ---\n" .. json) end
   return json
 end
 
@@ -44,7 +44,7 @@ end
 -- Extracts json data into a table
 -- arg1 = name of file, arg2 if in debug mode (default false)
 function ExtractJsonClass:extract(fileName, debug)
-  local json = fileString(fileName)
+  local json = fileString(fileName, debug)
   local jsonTable = {}
   if debug then print("--- Starting Extraction ---") end
   while self.indexTable.fieldEnd ~= nil do
