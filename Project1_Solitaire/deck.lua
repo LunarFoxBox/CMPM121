@@ -3,17 +3,20 @@ require "extractJson"
 
 DeckClass = {}
 
-function DeckClass:new(file, deckType, size, position, cardSize)
+function DeckClass:new(file, size, position)
   local deck = {}
   local metadata = {__index = DeckClass}
   setmetatable(deck, metadata)
   
   local json = ExtractJsonClass:new()
   deck.info = json:extract(file)
-  deck.type = deckType
+  for field, value in pairs(deck.info) do
+    if field == "DECK_TYPE" then
+      deck.type = value[1]
+    end
+  end
   deck.size = size
   deck.position = position
-  deck.cardSize = cardSize
   return deck
 end
 
@@ -27,9 +30,12 @@ function DeckClass:generate()
     return
   end
   local buildDeck = buildString()
-  return buildDeck(self)
+  self.cards = buildDeck(self)
 end
 
+function DeckClass:getDeck()
+  return self.cards
+end
 
 function standard(deck)
   local size = math.floor(deck.size/4) -- Distributes cards between suits
@@ -38,10 +44,11 @@ function standard(deck)
   -- Suit generator
   local function generateSuit(size, deckTable, color, suit)
     for cardNum = 1, size do
-      local card = CardClass:new(deck.position.x, deck.position.y, deck.info, deck.cardSize)
+      local card = CardClass:new(deck.position.x, deck.position.y, deck.info)
       card.color = deck.info.color[color]
       card.suit = deck.info.suit[suit]
-      value = cardNum % #deck.info.value -- Loops values if there are more cards than valid values
+      
+      local value = cardNum % #deck.info.value -- Loops values if there are more cards than valid values
       if value == 0 then value = #deck.info.value end
       card.value = deck.info.value[value]
       table.insert(deckTable, card)

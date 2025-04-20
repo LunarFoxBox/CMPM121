@@ -8,18 +8,26 @@ CARD_STATE = {
   GRABBED = 2
 }
 
-function CardClass:new(xPos, yPos, info, size)
+function CardClass:new(xPos, yPos, info)
     local card = {}
     local metatable = {__index = CardClass}
     setmetatable(card, metatable)
 
     card.position = Vector(xPos, yPos)
-    card.size = size
+    card.size = {}
+    for field, value in pairs(info) do
+      if field == "CARD_SIZE" then
+        card.size.x = value[1]
+        card.size.y = value[2]
+      end
+    end
     card.state = CARD_STATE.IDLE
   
     -- Adds the fields to the card based on provided info
     for fields, _ in pairs(info) do
-      load("card." .. tostring(fields) .. " = nil")
+      if fields ~= "DECK_TYPE" and fields ~= "CARD_SIZE" then
+        load("card." .. tostring(fields) .. " = nil")
+      end
     end
     return card
 end

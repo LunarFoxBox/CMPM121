@@ -5,7 +5,7 @@ require "board"
 require "deck"
 require "vector"
 
-BOARD =
+SOLITAIRE =
 {
   WIDTH = 1400,
   HEIGHT = 1000,
@@ -15,24 +15,25 @@ BOARD =
   OFFSET = 100,
   DRAW_NUM = 3,
   ZONE_SIZE = Vector(75, 120),
+  DECK_SIZE = 52
 }
 
 function love.load()
-  Board = BoardClass:new(BOARD.WIDTH, BOARD.HEIGHT, BOARD.RGB, BOARD.ALPHA)
+  Board = BoardClass:new(SOLITAIRE.WIDTH, SOLITAIRE.HEIGHT, SOLITAIRE.RGB, SOLITAIRE.ALPHA)
   
-  Deck = DeckClass:new("cards.json", "standard", 52, BOARD.DRAW_POS, BOARD.ZONE_SIZE)
-  Deck.std = Deck:generate()
+  Deck = DeckClass:new("cards.json", SOLITAIRE.DECK_SIZE, SOLITAIRE.DRAW_POS)
+  Deck:generate()
   print("--- Generated Deck ---")
-  print("Length = " .. tostring(#Deck.std))
-  for _, card in pairs(Deck.std) do
-    print("card:\nColor = " .. tostring(card.color) .. "\nSuit = " .. tostring(card.suit) .. "\nValue = " .. tostring(card.value) .. "\n")
+  print("Length = " .. tostring(#Deck:getDeck()))
+  for i, card in pairs(Deck:getDeck()) do
+    print("card:\t" .. tostring(i) .. "\nColor:\t" .. tostring(card.color) .. "\nSuit:\t" .. tostring(card.suit) .. "\nValue:\t" .. tostring(card.value) .. "\n")
   end
 end
 
 
 function love.draw()
-  Board:solitaire(BOARD.DRAW_POS, BOARD.OFFSET, BOARD.DRAW_NUM, BOARD.ZONE_SIZE)
-  for _, card in pairs(Deck.std) do
+  Board:solitaire(SOLITAIRE.DRAW_POS, SOLITAIRE.OFFSET, SOLITAIRE.DRAW_NUM, SOLITAIRE.ZONE_SIZE)
+  for _, card in pairs(Deck:getDeck()) do
     card:draw()
   end
 end

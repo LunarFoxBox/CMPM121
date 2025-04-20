@@ -14,7 +14,7 @@ function BoardClass:new(width, height, rgb, alpha)
     blue = rgb[3],
     alpha = alpha
   }
-  print(board.bg.red)
+  
   -- Setup background
   love.window.setMode(board.width, board.height)
   love.graphics.setBackgroundColor(board.bg.red, board.bg.green, board.bg.blue, board.bg.alpha)

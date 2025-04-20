@@ -1,4 +1,6 @@
 {
+    "DECK_TYPE": ["standard"],
+    "CARD_SIZE": ["75", "120"],
     "color": ["red", "black"],
     "suit": ["diamonds", "hearts", "clubs", "spades"],
     "value": [
