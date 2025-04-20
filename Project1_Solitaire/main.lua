@@ -6,5 +6,9 @@ require "extractJson"
 
 function love.load()
     local json = ExtractJsonClass:new()
-    json:extract("cards.json", true)
+    local t = json:extract("cards.json", true)
+    print("Printing colors from returned table")
+    for _, value in pairs(t["colors"]) do
+        print(value)
+    end
 end

@@ -45,7 +45,7 @@ end
 -- arg1 = name of file, arg2 if in debug mode (default false)
 function ExtractJsonClass:extract(fileName, debug)
   local json = fileString(fileName)
-  local dataTable = {}
+  local jsonTable = {}
   if debug then print("--- Starting Extraction ---") end
   while self.indexTable.fieldEnd ~= nil do
     -- field itself
@@ -57,7 +57,7 @@ function ExtractJsonClass:extract(fileName, debug)
     _, self.indexTable.fieldEnd = string.find(json, "\"", self.indexTable.fieldStart)
     if self.indexTable.fieldEnd == nil then break end
 
-    -- add field to the dataTable
+    -- add field to the jsonTable
     local field = string.sub(json, self.indexTable.fieldStart, self.indexTable.fieldEnd - 1)
     local valueTable = {}
 
@@ -72,7 +72,7 @@ function ExtractJsonClass:extract(fileName, debug)
       _, self.indexTable.valueEnd = string.find(json, "\"", self.indexTable.valueStart)
       if self.indexTable.valueEnd == nil then break end
 
-      -- insert the values into the dataTable's sub table
+      -- insert the values into the jsonTable's sub table
       local value = string.sub(json, self.indexTable.valueStart, self.indexTable.valueEnd - 1)
       table.insert(valueTable, value)
 
@@ -80,14 +80,14 @@ function ExtractJsonClass:extract(fileName, debug)
       self.indexTable.valueEnd = self.indexTable.valueEnd + 1
       if string.find(json, "]", self.indexTable.valueEnd - 1) == self.indexTable.valueEnd then break end
     end
-    dataTable[field] = valueTable
+    jsonTable[field] = valueTable
     self.indexTable.fieldEnd = self.indexTable.valueEnd
   end
 
   if debug then
-    debugPrint(dataTable)
+    debugPrint(jsonTable)
     print("--- Extraction Complete ---")
   end
-  return self.dataTable
+  return jsonTable
 end
 
